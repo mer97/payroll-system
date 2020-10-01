@@ -1,0 +1,259 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/web/admin/welcome"
+  },
+  "logoInfo": {
+    "title": "WM SYSTEM",
+    "image": "/public/images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "常规管理",
+      "icon": "fa fa-address-book",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "主页模板",
+          "href": "",
+          "icon": "fa fa-home",
+          "target": "_self",
+          "child": [
+            {
+              "title": "主页一",
+              "href": "/web/admin/welcome",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
+            },
+            {
+              "title": "主页二",
+              "href": "/web/admin/welcome-2",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
+            },
+            {
+              "title": "主页三",
+              "href": "/web/admin/welcome-3",
+              "icon": "fa fa-tachometer",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "菜单管理",
+          "href": "/web/admin/menu",
+          "icon": "fa fa-window-maximize",
+          "target": "_self"
+        },
+        {
+          "title": "系统设置",
+          "href": "/web/admin/setting",
+          "icon": "fa fa-gears",
+          "target": "_self"
+        },
+        {
+          "title": "表格示例",
+          "href": "/web/admin/table",
+          "icon": "fa fa-file-text",
+          "target": "_self"
+        },
+        {
+          "title": "表单示例",
+          "href": "",
+          "icon": "fa fa-calendar",
+          "target": "_self",
+          "child": [
+            {
+              "title": "普通表单",
+              "href": "/web/admin/form",
+              "icon": "fa fa-list-alt",
+              "target": "_self"
+            },
+            {
+              "title": "分步表单",
+              "href": "/web/admin/form-step",
+              "icon": "fa fa-navicon",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "登录模板",
+          "href": "",
+          "icon": "fa fa-flag-o",
+          "target": "_self",
+          "child": [
+            {
+              "title": "登录-1",
+              "href": "/web/admin/login",
+              "icon": "fa fa-stumbleupon-circle",
+              "target": "_blank"
+            },
+            {
+              "title": "登录-2",
+              "href": "/web/admin/login-2",
+              "icon": "fa fa-viacoin",
+              "target": "_blank"
+            },
+            {
+              "title": "登录-3",
+              "href": "/web/admin/login-3",
+              "icon": "fa fa-tags",
+              "target": "_blank"
+            }
+          ]
+        },
+        {
+          "title": "异常页面",
+          "href": "",
+          "icon": "fa fa-home",
+          "target": "_self",
+          "child": [
+            {
+              "title": "404页面",
+              "href": "/web/admin/404",
+              "icon": "fa fa-hourglass-end",
+              "target": "_self"
+            }
+          ]
+        },
+        {
+          "title": "其它界面",
+          "href": "",
+          "icon": "fa fa-snowflake-o",
+          "target": "",
+          "child": [
+            {
+              "title": "按钮示例",
+              "href": "/web/admin/button",
+              "icon": "fa fa-snowflake-o",
+              "target": "_self"
+            },
+            {
+              "title": "弹出层",
+              "href": "/web/admin/layer",
+              "icon": "fa fa-shield",
+              "target": "_self"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "组件管理",
+      "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "图标列表",
+          "href": "/web/admin/icon",
+          "icon": "fa fa-dot-circle-o",
+          "target": "_self"
+        },
+        {
+          "title": "图标选择",
+          "href": "/web/admin/icon-picker",
+          "icon": "fa fa-adn",
+          "target": "_self"
+        },
+        {
+          "title": "颜色选择",
+          "href": "/web/admin/color-select",
+          "icon": "fa fa-dashboard",
+          "target": "_self"
+        },
+        {
+          "title": "下拉选择",
+          "href": "/web/admin/table-select",
+          "icon": "fa fa-angle-double-down",
+          "target": "_self"
+        },
+        {
+          "title": "文件上传",
+          "href": "/web/admin/upload",
+          "icon": "fa fa-arrow-up",
+          "target": "_self"
+        },
+        {
+          "title": "富文本编辑器",
+          "href": "/web/admin/editor",
+          "icon": "fa fa-edit",
+          "target": "_self"
+        },
+        {
+          "title": "省市县区选择器",
+          "href": "/web/admin/area",
+          "icon": "fa fa-rocket",
+          "target": "_self"
+        }
+      ]
+    },
+    {
+      "title": "其它管理",
+      "icon": "fa fa-slideshare",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "多级菜单",
+          "href": "",
+          "icon": "fa fa-meetup",
+          "target": "",
+          "child": [
+            {
+              "title": "按钮1",
+              "href": "page/button.html?v=1",
+              "icon": "fa fa-calendar",
+              "target": "_self",
+              "child": [
+                {
+                  "title": "按钮2",
+                  "href": "page/button.html?v=2",
+                  "icon": "fa fa-snowflake-o",
+                  "target": "_self",
+                  "child": [
+                    {
+                      "title": "按钮3",
+                      "href": "page/button.html?v=3",
+                      "icon": "fa fa-snowflake-o",
+                      "target": "_self"
+                    },
+                    {
+                      "title": "表单4",
+                      "href": "page/form.html?v=1",
+                      "icon": "fa fa-calendar",
+                      "target": "_self"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "组织管理",
+      "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "部门管理",
+          "href": "/web/admin/organization/department",
+          "icon": "fa fa-dot-circle-o",
+          "target": "_self"
+        },
+        {
+          "title": "职位管理",
+          "href": "/web/admin/icon-picker",
+          "icon": "fa fa-adn",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}
