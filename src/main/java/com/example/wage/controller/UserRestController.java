@@ -22,9 +22,9 @@ public class UserRestController {
     /**
      * 获取当前登录的用户信息
      * 权限验证：
-     *      当请求/api/v1/user/userInfo接口时，判断该用户是否拥有“USER”权限。
+     *      当请求/api/v1/user/userInfo接口时，判断该用户是否拥有“DEFAULT”权限。
      */
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('DEFAULT')")
     @GetMapping("/userInfo")
     public ResultUtil getUserInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -67,6 +67,7 @@ public class DepartmentService extends ServiceImpl<DepartmentMapper, Department>
     public IPage<Department> selectPage(PageVo<Department> pageVo) {
         Page<Department> page = new Page<>(pageVo.getPage() - 1, pageVo.getLimit());
         LambdaQueryWrapper<Department> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.orderByDesc(BaseEntity::getCreateDate);
         if (pageVo.getSearchParams() != null) {
             Department department = pageVo.getSearchParams();
             if (StringUtils.isNotBlank(department.getId())) {

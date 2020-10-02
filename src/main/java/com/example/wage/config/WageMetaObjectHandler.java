@@ -82,9 +82,7 @@ public class WageMetaObjectHandler implements MetaObjectHandler {
             if ("admin".equals(authentication.getName())) {
                 employeeId = "admin";
             } else {
-                LambdaQueryWrapper<Employee> lambdaQueryWrapper = Wrappers.lambdaQuery();
-                lambdaQueryWrapper.eq(Employee::getName, authentication.getName());
-                Employee employee = employeeService.getOne(lambdaQueryWrapper);
+                Employee employee = employeeService.getCurrentLoginEmployee();
                 if (employee != null) {
                     employeeId = employee.getId();
                 }

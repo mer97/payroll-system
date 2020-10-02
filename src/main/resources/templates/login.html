@@ -42,11 +42,11 @@
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="username"></label>
-                    <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱" autocomplete="off" class="layui-input" value="admin">
+                    <input type="text" name="username" id="username" lay-verify="required" placeholder="请输入登录账号" lay-reqtext="登录账号不能为空" autocomplete="off" class="layui-input">
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-password" for="password"></label>
-                    <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="123456">
+                    <input type="password" name="password" id="password" lay-verify="required" placeholder="请输入密码" lay-reqtext="密码不能为空" autocomplete="off" class="layui-input">
                 </div>
 <!--                <div class="layui-form-item">-->
 <!--                    <label class="layui-icon layui-icon-vercode" for="captcha"></label>-->
@@ -56,7 +56,7 @@
 <!--                    </div>-->
 <!--                </div>-->
                 <div class="layui-form-item">
-                    <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
+                    <input type="checkbox" name="rememberMe" id="rememberMe" lay-skin="primary" title="记住密码">
                 </div>
                 <div class="layui-form-item">
                     <button class="layui-btn layui-btn layui-btn-normal layui-btn-fluid" lay-submit="" lay-filter="login">登 入</button>
@@ -89,33 +89,65 @@
             });
         });
 
+        // 获取Cookie中的用户名和密码
+        let loginFormCookie = getCookie();
+        if (loginFormCookie) {
+            let loginForm = JSON.parse(loginFormCookie)
+            $("#username").val(loginForm.username)
+            $("#password").val(loginForm.password)
+            $("#rememberMe").prop("checked", true);
+            form.render()
+        }
+
         // 进行登录操作
         form.on('submit(login)', function (data) {
-            data = data.field;
-            if (data.username == '') {
-                layer.msg('用户名不能为空');
-                return false;
-            }
-            if (data.password == '') {
-                layer.msg('密码不能为空');
-                return false;
-            }
-            if (data.captcha == '') {
-                layer.msg('验证码不能为空');
-                return false;
-            }
-
             $.ajax({
                 url: '/api/v1/login',
                 method: 'POST',
-                data,
+                data: data.field,
                 success: function (result) {
+                    // 判断是否选中了记住密码
+                    if ($("#rememberMe").is(':checked')) {
+                        //调用配置cookie方法,传入账号名，密码，和保存天数3个参数
+                        setCookie("userInfo", JSON.stringify(data.field), 30);
+                    } else {
+                        clearCookie("userInfo");
+                    }
+
                     //登录检验成功后跳转，这里我配置的跳转页面是/。
                     location.href = result['redirect'];
                 }
             });
             return false;
         });
+
+        //设置cookie
+        function setCookie(key, value, exdays) {
+            let exdate = new Date(); //获取时间
+            exdate.setTime(exdate.getTime() + 24 * 60 * 60 * 1000 * exdays); //保存的天数
+            //字符串拼接cookie
+            window.document.cookie = key + "=" + value + ";path=/;expires=" + exdate.toGMTString();
+        }
+
+        //读取cookie
+        function getCookie() {
+            if (document.cookie.length > 0) {
+                let arr = document.cookie.split('; '); //这里显示的格式需要切割一下自己可输出看下
+                for (let i = 0; i < arr.length; i++) {
+                    let arr2 = arr[i].split('='); //再次切割
+                    //判断查找相对应的值
+                    if (arr2[0] === 'userInfo') {
+                        return arr2[1];
+                    }
+                }
+            }
+        }
+
+        //清除cookie
+        function clearCookie(key) {
+            setCookie(key, "", -1)
+        }
+
     });
 </script>
 </body>

@@ -5,8 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author lihai
- * Create Date: 2020-10-01
+ * MyBatisPlus配置类
  */
 @Configuration
 public class MyBatisPlusConfig {

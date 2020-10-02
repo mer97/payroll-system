@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.wage.base.pojo.BaseEntity;
 import com.example.wage.exception.WarningException;
 import com.example.wage.mapper.DepartmentMapper;
 import com.example.wage.mapper.PositionMapper;
@@ -70,6 +71,7 @@ public class PositionService extends ServiceImpl<PositionMapper, Position> {
     public IPage<Position> selectPage(PageVo<Position> pageVo) {
         Page<Position> page = new Page<>(pageVo.getPage() - 1, pageVo.getLimit());
         LambdaQueryWrapper<Position> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.orderByDesc(BaseEntity::getCreateDate);
         if (pageVo.getSearchParams() != null) {
             Position position = pageVo.getSearchParams();
             if (StringUtils.isNotBlank(position.getDepartmentId())) {

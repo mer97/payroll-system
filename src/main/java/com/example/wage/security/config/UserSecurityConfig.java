@@ -1,7 +1,12 @@
 package com.example.wage.security.config;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.example.wage.common.bean.AjaxAuthFailureHandler;
 import com.example.wage.enumeration.ErrorCode;
+import com.example.wage.mapper.EmployeeMapper;
+import com.example.wage.pojo.Employee;
 import com.example.wage.util.JsonUtil;
 import com.example.wage.util.ResultUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +33,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
@@ -44,14 +50,7 @@ import java.util.Map;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static Map<String, String> ADMIN_MAP = new HashMap();
-
-    /*
-     * 模拟数据库用户名和密码(使用md5加密)
-     */
-    static {
-        ADMIN_MAP.put("admin", "123456");
-    }
+    @Resource private EmployeeMapper employeeMapper;
 
     /**
      * json 格式装换类
@@ -101,17 +100,32 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsService() throws UsernameNotFoundException {
         return (username) -> {
-            if (ADMIN_MAP.get(username) == null) {
-                throw new UsernameNotFoundException("User Not Found: " + username);
+            if (StringUtils.isBlank(username)) {
+                throw new UsernameNotFoundException("用户名不存在: " + username);
             }
-            /**
-             * 用户授权，用户名为lisi的拥有访问用户列表的权限
-             */
+
             List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
-            simpleGrantedAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
-            simpleGrantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+            simpleGrantedAuthorities.add(new SimpleGrantedAuthority("DEFAULT"));
+
+            String password;
+            // 用户授权
+            if ("admin".equals(username)) {
+                simpleGrantedAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+                password = "123456";
+            } else {
+                LambdaQueryWrapper<Employee> lambdaQueryWrapper = Wrappers.lambdaQuery();
+                lambdaQueryWrapper.eq(Employee::getLoginName, username);
+                Employee employee = employeeMapper.selectOne(lambdaQueryWrapper);
+                if (employee == null) {
+                    throw new UsernameNotFoundException("用户名不存在: " + username);
+                } else {
+                    simpleGrantedAuthorities.add(new SimpleGrantedAuthority(employee.getPermission()));
+                    password = employee.getPassword();
+                }
+            }
+
             return User.withUsername(username)
-                    .password(ADMIN_MAP.get(username))
+                    .password(password)
                     .authorities(simpleGrantedAuthorities)
                     .build();
         };
@@ -164,7 +178,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
                 )
                 .permitAll()
                 .anyRequest()
-                .hasAuthority("USER")
+                .hasAuthority("DEFAULT")
                 .and()
                 .formLogin()
                 .loginPage("/login")

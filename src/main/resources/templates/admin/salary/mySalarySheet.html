@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的工资条</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main">
+
+        <fieldset class="table-search-fieldset">
+            <legend>搜索信息</legend>
+            <div style="margin: 10px 10px 10px 10px">
+                <form class="layui-form layui-form-pane" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">月份</label>
+                            <div class="layui-input-inline">
+                                <label>
+                                    <input type="text" name="month" id="month" placeholder="请选择月份" autocomplete="off" class="layui-input">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+
+        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['form', 'table', 'miniPage', 'element', 'laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            miniPage = layui.miniPage,
+        laydate = layui.laydate;
+
+        //日期
+        laydate.render({
+            elem: '#month',
+            type: 'month',
+            trigger: 'click'
+        });
+
+        form.render();
+
+        table.render({
+            elem: '#currentTableId',
+            url: '/api/v1/salary/page/currentLoginName',
+            method: 'post',
+            contentType: "application/json;charset=UTF-8",
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print'],
+            parseData: function (res) { //将原始数据解析成 table 组件所规定的数据
+                return {
+                    "code": res.status === '200' ? 0 : 1, //解析接口状态
+                    "msg": res.message, //解析提示文本
+                    "count": res.data.total, //解析数据长度
+                    "data": res.data.records //解析数据列表
+                }
+            },
+            cols: [
+                [
+                    {field: 'employeeName', minWidth: 150, title: '员工姓名', sort: true},
+                    {field: 'bankCard', minWidth: 150, title: '收款银行卡号', sort: true},
+                    {field: 'month', minWidth: 80, title: '月份', sort: true},
+                    {field: 'baseSalary', minWidth: 80, title: '底薪', sort: true},
+                    {field: 'workday', minWidth: 80, title: '应工作日', sort: true},
+                    {field: 'absenteeism', minWidth: 80, title: '缺勤天数', sort: true},
+                    {field: 'allowance', minWidth: 80, title: '津贴', sort: true},
+                    {field: 'paid', minWidth: 80, title: '实发工资', sort: true},
+                ]
+            ],
+            limits: [10, 15, 20, 25, 50, 100],
+            limit: 10,
+            page: true,
+            skin: 'line'
+        });
+
+        // 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            //执行搜索重载
+            table.reload('currentTableId', {
+                page: {
+                    curr: 1
+                },
+                where: {
+                    searchParams: data.field
+                }
+            }, 'data');
+
+            return false;
+        });
+
+    });
+</script>
+</html>

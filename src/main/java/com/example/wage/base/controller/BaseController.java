@@ -13,10 +13,10 @@ public class BaseController {
     /**
      * 跳转到用户首页
      * 权限验证：
-     *      当请求/接口时，判断该用户是否拥有“USER”权限（多个权限使用hasAnyAuthority）。
+     *      当请求/接口时，判断该用户是否拥有“DEFAULT”权限（多个权限使用hasAnyAuthority）。
      */
     @GetMapping("/")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('DEFAULT')")
     public String index(){
         return "index";
     }

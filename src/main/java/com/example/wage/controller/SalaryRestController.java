@@ -66,4 +66,35 @@ public class SalaryRestController {
         return ResultUtil.success(salaryService.selectPage(pageVo));
     }
 
+    /**
+     * 分页查询当前登录用户的工资条
+     * @param pageVo 参数
+     * @return
+     */
+    @PreAuthorize("hasAuthority('USER')")
+    @PostMapping("/page/currentLoginName")
+    public ResultUtil selectPageByCurrentLoginName(@RequestBody PageVo<Salary> pageVo) {
+        return ResultUtil.success(salaryService.selectPageByCurrentLoginName(pageVo));
+    }
+
+    /**
+     * 报表：每月平均工资
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/statement/avgSalary")
+    public ResultUtil avgSalaryStatement() {
+        return ResultUtil.success(salaryService.avgSalaryStatement());
+    }
+
+    /**
+     * 获取最大、最小、总实发工资
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/maxMinSumPaid")
+    public ResultUtil maxMinSumPaid() {
+        return ResultUtil.success(salaryService.maxMinSumPaid());
+    }
+
 }

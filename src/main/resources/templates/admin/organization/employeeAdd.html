@@ -27,15 +27,15 @@
             <label class="layui-form-label required">入职日期</label>
             <div class="layui-input-block">
                 <input type="text" name="entryDate" id="entryDate" lay-verify="required" lay-reqtext="入职日期不能为空"
-                       placeholder="请选择入职日期" class="layui-input">
+                       placeholder="请选择入职日期" autocomplete="off" class="layui-input">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label required">电话号码</label>
+            <label class="layui-form-label required">手机号码</label>
             <div class="layui-input-block">
-                <input type="text" name="phone" id="phone" lay-verify="required|phone" lay-reqtext="电话号码不能为空"
-                       placeholder="请输入电话号码" autocomplete="off" class="layui-input">
+                <input type="text" name="phone" id="phone" lay-verify="required|phone" lay-reqtext="手机号码不能为空"
+                       placeholder="请输入手机号码" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -48,10 +48,10 @@
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label required">工资</label>
+            <label class="layui-form-label required">底薪</label>
             <div class="layui-input-block">
-                <input type="number" name="salary" id="salary" lay-verify="required|salary" lay-reqtext="工资不能为空"
-                       placeholder="请输入工资" class="layui-input">
+                <input type="number" name="salary" id="salary" lay-verify="required|salary" lay-reqtext="底薪不能为空"
+                       placeholder="请输入底薪" class="layui-input">
             </div>
         </div>
 
@@ -67,7 +67,7 @@
             <label class="layui-form-label required">登录账号</label>
             <div class="layui-input-block">
                 <input type="text" name="loginName" id="loginName" lay-verify="required|loginName" lay-reqtext="登录账号不能为空"
-                       placeholder="请输入登录账号" class="layui-input">
+                       placeholder="请输入登录账号" autocomplete="off" class="layui-input">
             </div>
         </div>
 
@@ -140,15 +140,11 @@
         form.verify({
             loginName: [
                 /^[\S]+$/
-                , '不能出现空格'
+                , '登录账号不能出现空格'
             ],
             bankCard: [
                 /^([1-9])(\d{14}|\d{18})$/
                 , '请输入正确的银行卡号'
-            ],
-            salary: [
-                /^([1-9])(\d+)$/
-                , '请输入正确的工资'
             ],
             pass: [
                 /^[\S]{6,12}$/

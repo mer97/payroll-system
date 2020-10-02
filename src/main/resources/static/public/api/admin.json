@@ -1,0 +1,59 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/web/admin/salary/statement"
+  },
+  "logoInfo": {
+    "title": "WM SYSTEM",
+    "image": "/public/images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "工资管理",
+      "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "工资报表",
+          "href": "/web/admin/salary/statement",
+          "icon": "fa fa-tachometer",
+          "target": "_self"
+        },
+        {
+          "title": "工资条",
+          "href": "/web/admin/salary/salarySheet",
+          "icon": "fa fa-list-alt",
+          "target": "_self"
+        }
+      ]
+    },
+    {
+      "title": "组织管理",
+      "icon": "fa fa-institution",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "部门管理",
+          "href": "/web/admin/organization/department",
+          "icon": "fa fa-dot-circle-o",
+          "target": "_self"
+        },
+        {
+          "title": "职位管理",
+          "href": "/web/admin/organization/position",
+          "icon": "fa fa-adn",
+          "target": "_self"
+        },
+        {
+          "title": "员工管理",
+          "href": "/web/admin/organization/employee",
+          "icon": "fa fa-male",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}

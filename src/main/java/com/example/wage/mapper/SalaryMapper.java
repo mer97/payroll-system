@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.wage.pojo.Salary;
 
 /**
- * @author lihai
- * Create Date: 2020-10-01
+ * 工资条 Mapper 接口
  */
 public interface SalaryMapper extends BaseMapper<Salary> {
 }

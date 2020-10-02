@@ -4,6 +4,8 @@ import com.example.wage.pojo.Employee;
 import com.example.wage.service.EmployeeService;
 import com.example.wage.util.ResultUtil;
 import com.example.wage.vo.PageVo;
+import com.example.wage.vo.UpdatePasswordVo;
+import com.example.wage.vo.UserInfoVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -86,5 +88,50 @@ public class EmployeeRestController {
     public ResultUtil allByPositionId(@PathVariable("positionId") String positionId) {
         return ResultUtil.success(employeeService.getAllByPositionId(positionId));
     }
+
+    /**
+     * 当前员工数量
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/count")
+    public ResultUtil count() {
+        return ResultUtil.success(employeeService.count());
+    }
+
+    /**
+     * 修改用户信息
+     * @param userInfoVo
+     * @return
+     */
+    @PreAuthorize("hasAuthority('DEFAULT')")
+    @PostMapping("/saveUserInfo")
+    public ResultUtil saveUserInfo(@RequestBody UserInfoVo userInfoVo) {
+        employeeService.saveUserInfo(userInfoVo);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 修改登录密码
+     * @param updatePasswordVo
+     * @return
+     */
+    @PreAuthorize("hasAuthority('DEFAULT')")
+    @PostMapping("/updatePassword")
+    public ResultUtil updatePassword(@RequestBody UpdatePasswordVo updatePasswordVo) {
+        employeeService.updatePassword(updatePasswordVo);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 获取当前登录用户的信息
+     * @return
+     */
+    @PreAuthorize("hasAuthority('DEFAULT')")
+    @GetMapping("/currentLoginEmployee")
+    public ResultUtil currentLoginEmployee() {
+        return ResultUtil.success(employeeService.getCurrentLoginEmployee());
+    }
+
 
 }

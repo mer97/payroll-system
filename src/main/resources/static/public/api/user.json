@@ -1,0 +1,27 @@
+{
+  "homeInfo": {
+    "title": "首页",
+    "href": "/web/admin/salary/mySalarySheet"
+  },
+  "logoInfo": {
+    "title": "WM SYSTEM",
+    "image": "/public/images/logo.png",
+    "href": ""
+  },
+  "menuInfo": [
+    {
+      "title": "工资管理",
+      "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "我的工资条",
+          "href": "/web/admin/salary/mySalarySheet",
+          "icon": "fa fa-list-alt",
+          "target": "_self"
+        }
+      ]
+    }
+  ]
+}

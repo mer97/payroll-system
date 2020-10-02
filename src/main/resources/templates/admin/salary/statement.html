@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<style>
+    .welcome .layui-card {
+        border: 1px solid #f2f2f2;
+        border-radius: 5px;
+    }
+
+    .welcome .icon {
+        margin-right: 10px;
+        color: #1aa094;
+    }
+
+    .welcome .icon-cray {
+        color: #ffb800 !important;
+    }
+
+    .welcome .icon-blue {
+        color: #1e9fff !important;
+    }
+
+    .welcome .icon-tip {
+        color: #ff5722 !important;
+    }
+
+    .welcome .layuimini-qiuck-module {
+        text-align: center;
+        margin-top: 10px
+    }
+
+    .welcome .layuimini-qiuck-module a i {
+        display: inline-block;
+        width: 100%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        border-radius: 2px;
+        font-size: 30px;
+        background-color: #F8F8F8;
+        color: #333;
+        transition: all .3s;
+        -webkit-transition: all .3s;
+    }
+
+    .welcome .layuimini-qiuck-module a cite {
+        position: relative;
+        top: 2px;
+        display: block;
+        color: #666;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    .welcome .welcome-module {
+        width: 100%;
+    }
+
+    .welcome .panel {
+        background-color: #fff;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+        box-shadow: 0 1px 1px rgba(0, 0, 0, .05)
+    }
+
+    .welcome .panel-body {
+        padding: 10px
+    }
+
+    .welcome .panel-title {
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 12px;
+        color: inherit
+    }
+
+    .welcome .label {
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+        margin-top: .3em;
+    }
+
+    .welcome .layui-red {
+        color: red
+    }
+
+    .welcome .main_btn > p {
+        height: 40px;
+    }
+
+    .welcome .layui-bg-number {
+        background-color: #F8F8F8;
+    }
+
+    .welcome .layuimini-notice:hover {
+        background: #f6f6f6;
+    }
+
+    .welcome .layuimini-notice {
+        padding: 7px 16px;
+        clear: both;
+        font-size: 12px !important;
+        cursor: pointer;
+        position: relative;
+        transition: background 0.2s ease-in-out;
+    }
+
+    .welcome .layuimini-notice-title, .layuimini-notice-label {
+        padding-right: 70px !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+    }
+
+    .welcome .layuimini-notice-title {
+        line-height: 28px;
+        font-size: 14px;
+    }
+
+    .welcome .layuimini-notice-extra {
+        position: absolute;
+        top: 50%;
+        margin-top: -8px;
+        right: 16px;
+        display: inline-block;
+        height: 16px;
+        color: #999;
+    }
+</style>
+<div class="layuimini-container layuimini-page-anim">
+    <div class="layuimini-main welcome">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-warning icon"></i>数据统计</div>
+                            <div class="layui-card-body">
+                                <div class="welcome-module">
+                                    <div class="layui-row layui-col-space10">
+                                        <div class="layui-col-xs3">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-blue">实时</span>
+                                                        <h5>员工统计</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 class="no-margins" id="employeeCount"></h1>
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-cyan">实时</span>
+                                                        <h5>总发工资</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 class="no-margins" id="sumPaid"></h1>
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-orange">实时</span>
+                                                        <h5>最高工资</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 class="no-margins" id="maxPaid"></h1>
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs3">
+                                            <div class="panel layui-bg-number">
+                                                <div class="panel-body">
+                                                    <div class="panel-title">
+                                                        <span class="label pull-right layui-bg-green">实时</span>
+                                                        <h5>最低工资</h5>
+                                                    </div>
+                                                    <div class="panel-content">
+                                                        <h1 class="no-margins" id="minPaid"></h1>
+                                                        <small></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-header"><i class="fa fa-line-chart icon"></i>平均工资</div>
+                            <div class="layui-card-body">
+                                <div id="avgSalaryECharts" style="width: 100%;min-height:55vh"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['layer', 'echarts'], function () {
+        var $ = layui.jquery,
+            layer = layui.layer,
+            echarts = layui.echarts;
+
+        var avgSalaryECharts = echarts.init(document.getElementById('avgSalaryECharts'), 'walden');
+
+        // 获取所有部门
+        $.ajax({
+            url: '/api/v1/employee/count',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    $("#employeeCount").text(stateFormat(res.data))
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+        // 获取所有部门
+        $.ajax({
+            url: '/api/v1/salary/maxMinSumPaid',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    $("#sumPaid").text(stateFormat('￥' + res.data.sum))
+                    $("#maxPaid").text(stateFormat('￥' + res.data.max))
+                    $("#minPaid").text(stateFormat('￥' + res.data.min))
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+        // 报表：每月平均工资
+        $.ajax({
+            url: '/api/v1/salary/statement/avgSalary',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    if (res.data) {
+                        let monthList = Object.keys(res.data)
+                        let avgSalaryList = Object.values(res.data)
+                        // 生成ECharts报表
+                        let option = buildOptions(monthList, avgSalaryList, 12);
+                        avgSalaryECharts.setOption(option);
+                        // ECharts 窗口缩放自适应
+                        window.onresize = function () {
+                            avgSalaryECharts.resize();
+                        }
+                    }
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+
+
+        function colors() {
+            return ['#409EFF', '#00BF7F', '#FB9D30', '#8C55D4', '#1DD5E0', '#E3594F', '#51677D', '#7FB4E8','#E044E3']
+        }
+
+        function stateFormat(value) {
+            value += ''
+            if (!value.includes('.')) value += '.'
+            return value.replace(/(\d)(?=(\d{3})+\.)/g, function ($0, $1) {
+                return $1 + ','
+            }).replace(/\.$/, '')
+        }
+
+        function buildSeries(series, isShowLabel) {
+            for (let i = 0; i < series.length; i++) {
+                let color = colors()[i]
+                if (series[i].type === 'bar') {
+                    series[i].barGap = 0
+                    series[i].barWidth = 30
+                    series[i].itemStyle = {
+                        normal: {
+                            barBorderRadius: 4,
+                            color: color,
+                            label: {
+                                show: isShowLabel,
+                                position: 'insideTop',
+                                formatter: function (params) {
+                                    if (params.value > 0) {
+                                        return params.value
+                                    } else {
+                                        return ''
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    series[i].areaStyle = {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: color
+                            }, {
+                                offset: 1, color: '#e6f9f2'
+                            }],
+                            global: false
+                        },
+                        opacity: 0.3
+                    }
+                } else {
+                    series[i].smooth = true
+                    series[i].itemStyle = {
+                        normal: {
+                            color: color,
+                            label: {
+                                show: isShowLabel,
+                                formatter: function (data) {
+                                    return stateFormat(data.value)
+                                }
+                            }
+                        }
+                    }
+
+                    series[i].areaStyle = {
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 0.1,
+                            colorStops: [{
+                                offset: 0, color: color
+                            }, {
+                                offset: 1, color: '#e6f9f2'
+                            }],
+                            global: false
+                        },
+                        opacity: 0.3
+                    }
+                }
+            }
+
+            return series
+        }
+
+        function buildDataZoom(dataZoom, maxItemCount, itemCount) {
+            if (itemCount > maxItemCount) {
+                const startZ = 100 - (maxItemCount / itemCount * 100)
+                dataZoom = [
+                    {
+                        type: 'slider',
+                        start: startZ,
+                        end: 100,
+                        height: 15,
+                        borderColor: '#ffffff',
+                        backgroundColor: '#E2F1FF',
+                        dataBackground: {
+                            lineStyle: {
+                                color: '#409EFF'
+                            },
+                            areaStyle: {
+                                color: {
+                                    type: 'linear',
+                                    x: 0,
+                                    y: 0,
+                                    x2: 0,
+                                    y2: 1,
+                                    colorStops: [{
+                                        offset: 1, color: '#409EFF'
+                                    }, {
+                                        offset: 0, color: '#eff7ff'
+                                    }],
+                                    global: false
+                                },
+                                opacity: 0.3
+                            }
+                        },
+                        fillerColor: 'rgba(64,158,255,0.5)',
+                        handleSize: '80%',
+                        handleStyle: {
+                            color: '#409EFF'
+                        },
+                        bottom: 5
+                    },
+                    {
+                        type: 'inside',
+                        show: true,
+                        realtime: true,
+                        start: startZ,
+                        end: 100
+                    }
+                ]
+            }
+
+            return dataZoom;
+        }
+
+        function buildOptions(data, value, maxItemCount) {
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: 25,
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: data,
+                    splitLine: {
+                        show: false
+                    },
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '金额（￥）',
+                    splitLine: {
+                        show: false
+                    },
+                    nameTextStyle: {
+                        lineHeight: 40,
+                        padding: [0, 0, 0, -45]
+                    }
+                },
+                series: [
+                    {
+                        name: '平均工资',
+                        type: 'line',
+                        data: value
+                    }
+                ]
+            };
+
+            option.dataZoom = buildDataZoom(option.dataZoom, maxItemCount,
+                option.xAxis.data.length);
+
+            option.series = buildSeries(option.series, true)
+
+            return option;
+        }
+
+    });
+</script>
+</body>
+</html>

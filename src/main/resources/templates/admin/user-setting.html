@@ -12,35 +12,35 @@
 </head>
 <body>
 <style>
-    .layui-form-item .layui-input-company {width: auto;padding-right: 10px;line-height: 38px;}
+    .layui-form-item .layui-input-company {
+        width: auto;
+        padding-right: 10px;
+        line-height: 38px;
+    }
 </style>
 <div class="layuimini-container layuimini-page-anim">
     <div class="layuimini-main">
 
         <div class="layui-form layuimini-form">
             <div class="layui-form-item">
-                <label class="layui-form-label required">管理账号</label>
+                <label class="layui-form-label required">登录账号</label>
                 <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="required" lay-reqtext="管理账号不能为空" placeholder="请输入管理账号"  value="admin" class="layui-input">
-                    <tip>填写自己管理账号的名称。</tip>
+                    <input type="text" name="loginName" id="loginName" disabled="disabled"
+                           lay-verify="required|loginName" lay-reqtext="登录账号不能为空" placeholder="请输入登录账号"
+                           class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label required">手机</label>
+                <label class="layui-form-label required">手机号码</label>
                 <div class="layui-input-block">
-                    <input type="number" name="phone" lay-verify="required" lay-reqtext="手机不能为空" placeholder="请输入手机"  value="" class="layui-input">
+                    <input type="number" name="phone" id="phone" lay-verify="required|phone" lay-reqtext="手机号码不能为空"
+                           placeholder="请输入手机号码" value="" class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">邮箱</label>
                 <div class="layui-input-block">
-                    <input type="email" name="email"  placeholder="请输入邮箱"  value="" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">备注信息</label>
-                <div class="layui-input-block">
-                    <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+                    <input type="email" name="email" id="email" placeholder="请输入邮箱" value="" class="layui-input">
                 </div>
             </div>
 
@@ -53,9 +53,10 @@
     </div>
 </div>
 <script>
-    layui.use(['form','miniPage'], function () {
+    layui.use(['form', 'miniPage'], function () {
         var form = layui.form,
             layer = layui.layer,
+            $ = layui.$,
             miniPage = layui.miniPage;
 
         /**
@@ -63,15 +64,46 @@
          */
         form.render();
 
+        // 获取当前登录员工的信息
+        $.ajax({
+            url: '/api/v1/employee/currentLoginEmployee',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    $("#loginName").val(res.data.loginName)
+                    $("#phone").val(res.data.phone)
+                    $("#email").val(res.data.email)
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
         //监听提交
         form.on('submit(saveBtn)', function (data) {
-            var index = layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            }, function () {
-                layer.close(index);
-                miniPage.hashHome();
+            $.ajax({
+                url: '/api/v1/employee/saveUserInfo',
+                method: 'post',
+                data: JSON.stringify(data.field),
+                contentType: "application/json",
+                success: function (res) {
+                    if (res.status === '200') {
+                        layer.msg("保存成功", {time: 500, icon: 1, offset: '60px'})
+                    } else {
+                        layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                    }
+                }
             });
+
             return false;
+        });
+
+        //自定义验证规则
+        form.verify({
+            loginName: [
+                /^[\S]+$/
+                , '登录账号不能出现空格'
+            ]
         });
 
     });

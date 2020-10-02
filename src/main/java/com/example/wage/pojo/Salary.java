@@ -18,7 +18,7 @@ public class Salary extends BaseEntity {
 	private String positionId; 	// 职位ID
 	private String employeeId; 	//员工ID
 	private String month; 		//月份
-	private int baseSalary; // 底薪
+	private double baseSalary; // 底薪
 	private double workday; 	// 应工作日
 	private double absenteeism; // 缺勤天数
 	private double allowance;	// 津贴
