@@ -1,5 +1,5 @@
 server:
-  port: 7777
+  port: 8080
 
 spring:
   datasource:
@@ -38,6 +38,4 @@ mybatis-plus:
       logic-delete-field: delFlag
       logic-delete-value: 1
       logic-not-delete-value: 0
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
