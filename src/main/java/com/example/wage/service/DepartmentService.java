@@ -5,15 +5,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.wage.base.pojo.BaseEntity;
 import com.example.wage.exception.WarningException;
 import com.example.wage.mapper.DepartmentMapper;
 import com.example.wage.pojo.Department;
+import com.example.wage.pojo.Position;
 import com.example.wage.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 部门管理服务类
@@ -80,7 +83,15 @@ public class DepartmentService extends ServiceImpl<DepartmentMapper, Department>
      */
     public void deleteDepartment(String id) {
         super.removeById(id);
-        positionService.deletePosition(id);
+        LambdaQueryWrapper<Position> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.eq(Position::getDepartmentId, id);
+        List<String> positionId = positionService.list(lambdaQueryWrapper)
+                .stream()
+                .map(BaseEntity::getId)
+                .collect(Collectors.toList());
+        if (positionId.size() > 0) {
+            positionService.deletePositionBatch(positionId);
+        }
     }
 
     /**
@@ -90,6 +101,14 @@ public class DepartmentService extends ServiceImpl<DepartmentMapper, Department>
      */
     public void deleteDepartmentBatch(List<String> ids) {
         super.removeByIds(ids);
-        positionService.deletePositionBatch(ids);
+        LambdaQueryWrapper<Position> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.in(Position::getDepartmentId, ids);
+        List<String> positionId = positionService.list(lambdaQueryWrapper)
+                .stream()
+                .map(BaseEntity::getId)
+                .collect(Collectors.toList());
+        if (positionId.size() > 0) {
+            positionService.deletePositionBatch(positionId);
+        }
     }
 }
