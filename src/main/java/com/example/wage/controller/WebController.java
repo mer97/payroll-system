@@ -94,6 +94,11 @@ public class WebController {
         return "admin/404";
     }
 
+    @GetMapping("/404")
+    public String notFound2() {
+        return "404";
+    }
+
     @GetMapping("/admin/button")
     public String button() {
         return "admin/button";
@@ -166,6 +171,16 @@ public class WebController {
     @GetMapping("/admin/organization/employeeAdd")
     public String employeeAdd() {
         return "admin/organization/employeeAdd";
+    }
+
+    @GetMapping("/admin/salary/salarySheet")
+    public String salarySheet() {
+        return "admin/salary/salarySheet";
+    }
+
+    @GetMapping("/admin/salary/salarySheetAdd")
+    public String salarySheetAdd() {
+        return "admin/salary/salarySheetAdd";
     }
 
 //    /**

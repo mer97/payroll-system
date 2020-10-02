@@ -17,6 +17,7 @@ public class Employee extends BaseEntity {
 	private Date entryDate; 	// 入职时间
 	private String phone; 	// 电话
 	private String email; 	// 邮箱
+	private int salary; 	// 工资/月
 	private String bankCard; 	// 银行卡号
 	private String loginName;	//	登录账号
 	private String password;	//	登录密码

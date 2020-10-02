@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>员工管理</title>
+    <title>工资条</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -44,9 +44,18 @@
                             <label class="layui-form-label">员工</label>
                             <div class="layui-input-inline">
                                 <label>
-                                    <select name="id" id="employeeList" lay-search="">
+                                    <select name="employeeId" id="employeeList" lay-search="">
                                         <option value="">直接选择或搜索选择</option>
                                     </select>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">月份</label>
+                            <div class="layui-input-inline">
+                                <label>
+                                    <input type="text" name="month" id="month" placeholder="请选择月份" autocomplete="off" class="layui-input">
                                 </label>
                             </div>
                         </div>
@@ -78,19 +87,27 @@
 </div>
 </body>
 <script>
-    layui.use(['form', 'table', 'miniPage', 'element'], function () {
+    layui.use(['form', 'table', 'miniPage', 'element', 'laydate'], function () {
         var $ = layui.jquery,
             form = layui.form,
             table = layui.table,
-            miniPage = layui.miniPage;
+            miniPage = layui.miniPage,
+        laydate = layui.laydate;
 
         let departmentList, positionList, employeeList;
+
+        //日期
+        laydate.render({
+            elem: '#month',
+            type: 'month',
+            trigger: 'click'
+        });
 
         form.render();
 
         table.render({
             elem: '#currentTableId',
-            url: '/api/v1/employee/page',
+            url: '/api/v1/salary/page',
             method: 'post',
             contentType: "application/json;charset=UTF-8",
             toolbar: '#toolbarDemo',
@@ -110,24 +127,14 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'name', minWidth: 150, title: '员工姓名', sort: true},
-                    {field: 'entryDate', minWidth: 150, title: '入职时间', sort: true},
-                    {field: 'phone', minWidth: 150, title: '电话号码', sort: true},
-                    {field: 'email', minWidth: 150, title: '邮箱', sort: true},
-                    {field: 'salary', minWidth: 150, title: '工资', sort: true},
-                    {field: 'bankCard', minWidth: 150, title: '银行卡号', sort: true},
-                    {
-                        field: 'permission', minWidth: 150, title: '权限', sort: true, templet: function (d) {
-
-                            if (d.permission === 'ADMIN') {
-                                return "管理员"
-                            } else if (d.permission === "USER") {
-                                return "普通用户"
-                            } else {
-                                return d.permission
-                            }
-                        }
-                    },
+                    {field: 'employeeName', minWidth: 150, title: '员工姓名', sort: true},
+                    {field: 'bankCard', minWidth: 150, title: '收款银行卡号', sort: true},
+                    {field: 'month', minWidth: 80, title: '月份', sort: true},
+                    {field: 'baseSalary', minWidth: 80, title: '底薪', sort: true},
+                    {field: 'workday', minWidth: 80, title: '应工作日', sort: true},
+                    {field: 'absenteeism', minWidth: 80, title: '缺勤天数', sort: true},
+                    {field: 'allowance', minWidth: 80, title: '津贴', sort: true},
+                    {field: 'paid', minWidth: 80, title: '实发工资', sort: true},
                     {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center"}
                 ]
             ],
@@ -157,11 +164,11 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('/web/admin/organization/employeeAdd');
+                var content = miniPage.getHrefContent('/web/admin/salary/salarySheetAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '添加员工',
+                    title: '添加工资条',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
@@ -186,9 +193,9 @@
                     var names = data.map(i => i.name).join(",")
                     var ids = data.map(i => i.id)
 
-                    layer.confirm('确认删除 ' + names + " 吗？", function (index) {
+                    layer.confirm('确认删除吗？', function (index) {
                         $.ajax({
-                            url: '/api/v1/employee/batch/' + ids,
+                            url: '/api/v1/salary/batch/' + ids,
                             method: 'delete',
                             success: function (res) {
                                 if (res.status === '200') {
@@ -217,11 +224,11 @@
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var content = miniPage.getHrefContent('/web/admin/organization/employeeAdd');
+                var content = miniPage.getHrefContent('/web/admin/salary/salarySheetAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '编辑员工',
+                    title: '编辑工资条',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
@@ -231,17 +238,13 @@
                     success: function (layero, index) {
                         //获取子页面的元素，进行数据渲染
                         layero.find("#id").val(data.id);
-                        layero.find("#name").val(data.name);
-                        layero.find("#entryDate").val(data.entryDate);
-                        layero.find("#phone").val(data.phone);
-                        layero.find("#email").val(data.email);
-                        layero.find("#salary").val(data.salary);
+                        layero.find("#month2").val(data.month);
+                        layero.find("#baseSalary").val(data.baseSalary);
+                        layero.find("#workday").val(data.workday);
+                        layero.find("#absenteeism").val(data.absenteeism);
+                        layero.find("#allowance").val(data.allowance);
+                        layero.find("#paid").val(data.paid);
                         layero.find("#bankCard").val(data.bankCard);
-                        layero.find("#loginName").val(data.loginName);
-                        layero.find("#password").val(data.password);
-                        layero.find("#permission").val(data.permission);
-                        layero.find("input[name=permission][value=ADMIN]").attr("checked", data.permission === 'ADMIN');
-                        layero.find("input[name=permission][value=USER]").attr("checked", data.permission === 'USER');
                         for (let i in departmentList) {
                             layero.find("#departmentList2").append("<option value=" + departmentList[i].id + ">" + departmentList[i].name + "</option>");
                         }
@@ -255,6 +258,14 @@
                         }
                         layero.find("#positionList2").val(data.positionId);
 
+                        let selectEmployeeList = employeeList.filter(p => p.positionId === data.positionId);
+                        if (selectEmployeeList) {
+                            for (let i in selectEmployeeList) {
+                                layero.find("#employeeList2").append("<option value=" + selectEmployeeList[i].id + ">" + selectEmployeeList[i].name + "</option>");
+                            }
+                        }
+                        layero.find("#employeeList2").val(data.employeeId);
+
                         form.render('select');
                     },
                 });
@@ -263,9 +274,9 @@
                 });
                 return false;
             } else if (obj.event === 'delete') {
-                layer.confirm('确认删除 ' + data.name + " 吗？", function (index) {
+                layer.confirm('确认删除吗？', function (index) {
                     $.ajax({
-                        url: '/api/v1/employee/' + data.id,
+                        url: '/api/v1/salary/' + data.id,
                         method: 'delete',
                         success: function (res) {
                             if (res.status === '200') {

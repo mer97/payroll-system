@@ -236,8 +236,22 @@
       ]
     },
     {
-      "title": "组织管理",
+      "title": "工资管理",
       "icon": "fa fa-lemon-o",
+      "href": "",
+      "target": "_self",
+      "child": [
+        {
+          "title": "工资条",
+          "href": "/web/admin/salary/salarySheet",
+          "icon": "fa fa-list-alt",
+          "target": "_self"
+        }
+      ]
+    },
+    {
+      "title": "组织管理",
+      "icon": "fa fa-institution",
       "href": "",
       "target": "_self",
       "child": [
@@ -256,7 +270,7 @@
         {
           "title": "员工管理",
           "href": "/web/admin/organization/employee",
-          "icon": "fa fa-adn",
+          "icon": "fa fa-male",
           "target": "_self"
         }
       ]

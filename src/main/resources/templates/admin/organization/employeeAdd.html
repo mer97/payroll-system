@@ -48,6 +48,14 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label required">工资</label>
+            <div class="layui-input-block">
+                <input type="number" name="salary" id="salary" lay-verify="required|salary" lay-reqtext="工资不能为空"
+                       placeholder="请输入工资" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label required">银行卡号</label>
             <div class="layui-input-block">
                 <input type="text" name="bankCard" id="bankCard" lay-verify="required|bankCard" lay-reqtext="银行卡号不能为空"
@@ -137,6 +145,10 @@
             bankCard: [
                 /^([1-9])(\d{14}|\d{18})$/
                 , '请输入正确的银行卡号'
+            ],
+            salary: [
+                /^([1-9])(\d+)$/
+                , '请输入正确的工资'
             ],
             pass: [
                 /^[\S]{6,12}$/

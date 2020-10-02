@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+</head>
+<body>
+<div class="layuimini-main">
+
+    <div class="layui-form layuimini-form">
+        <input type="text" name="id" id="id" hidden="hidden">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">部门</label>
+            <div class="layui-input-block">
+                <select name="departmentId" id="departmentList2" lay-filter="departmentList2" lay-search=""
+                        lay-verify="required"
+                        lay-reqtext="部门不能为空">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">职位</label>
+            <div class="layui-input-block">
+                <select name="positionId" id="positionList2" lay-filter="positionList2" lay-search=""
+                        lay-verify="required"
+                        lay-reqtext="职位不能为空">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">员工</label>
+            <div class="layui-input-block">
+                <select name="employeeId" id="employeeList2" lay-filter="employeeList2" lay-search=""
+                        lay-verify="required"
+                        lay-reqtext="员工不能为空">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">月份</label>
+            <div class="layui-input-block">
+                <input type="text" name="month" id="month2" lay-verify="required" lay-reqtext="入职日期不能为空"
+                       placeholder="请选择月份" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">底薪</label>
+            <div class="layui-input-block">
+                <input type="number" name="baseSalary" id="baseSalary" lay-verify="required" lay-reqtext="底薪不能为空"
+                       placeholder="请输入底薪" disabled="disabled" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">应工作日</label>
+            <div class="layui-input-block">
+                <input type="number" name="workday" id="workday" lay-verify="required" lay-reqtext="应工作日不能为空"
+                       placeholder="请输入应工作日" oninput="if(value > 31 || value < 0 ){alert('非法输入！');value = ''}"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">缺勤天数</label>
+            <div class="layui-input-block">
+                <input type="number" name="absenteeism" id="absenteeism"
+                       oninput="if(value > 31 || value < 0 ){alert('非法输入！');value = ''}"
+                       placeholder="请输入缺勤天数" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">津贴</label>
+            <div class="layui-input-block">
+                <input type="number" name="allowance" id="allowance"
+                       placeholder="请输入津贴" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">实发工资</label>
+            <div class="layui-input-block">
+                <input type="number" name="paid" id="paid" lay-verify="required" lay-reqtext="实发工资不能为空"
+                       placeholder="请输入实发工资" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">收款银行卡号</label>
+            <div class="layui-input-block">
+                <input type="text" name="bankCard" id="bankCard" lay-verify="required|bankCard" lay-reqtext="收款银行卡号不能为空"
+                       placeholder="请输入收款银行卡号" disabled="disabled" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'table', 'laydate'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            table = layui.table,
+            $ = layui.$,
+            laydate = layui.laydate;
+
+        let positionList, employeeList;
+
+        //日期
+        laydate.render({
+            elem: '#month2',
+            type: 'month',
+            trigger: 'click'
+        });
+
+        /**
+         * 初始化表单，要加上，不然刷新部分组件可能会不加载
+         */
+        form.render();
+
+        //自定义验证规则
+        form.verify({
+            loginName: [
+                /^[\S]+$/
+                , '不能出现空格'
+            ],
+            bankCard: [
+                /^([1-9])(\d{14}|\d{18})$/
+                , '请输入正确的银行卡号'
+            ],
+            salary: [
+                /^([1-9])(\d+)$/
+                , '请输入正确的工资'
+            ],
+            pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+        });
+
+        // 获取所有职位
+        $.ajax({
+            url: '/api/v1/position/all',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    positionList = res.data
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+        // 获取所有员工
+        $.ajax({
+            url: '/api/v1/employee/all',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    employeeList = res.data
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+        // 当前弹出层，防止ID被覆盖
+        var parentIndex = layer.index;
+
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            $.ajax({
+                url: '/api/v1/salary/save',
+                method: 'post',
+                data: JSON.stringify(data.field),
+                contentType: "application/json",
+                success: function (res) {
+                    if (res.status === '200') {
+                        layer.msg("保存成功", {time: 500, icon: 1, offset: '60px'}, function () {
+                            // 关闭弹出层
+                            layer.close(parentIndex);
+                            parent.location.reload();
+                        })
+                    } else {
+                        layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                    }
+                }
+            });
+
+            return false;
+        });
+
+        form.on('select(departmentList2)', function (data) {
+            $("#positionList2").empty();
+            $("#positionList2").append("<option value=\"\">直接选择或搜索选择</option>");
+
+            let selectPositionList = positionList.filter(p => p.departmentId === data.value);
+            if (selectPositionList) {
+                for (let i in selectPositionList) {
+                    $("#positionList2").append("<option value=" + selectPositionList[i].id + ">" + selectPositionList[i].name + "</option>");
+                }
+            }
+
+            form.render("select");
+        })
+
+        form.on('select(positionList2)', function (data) {
+            $("#employeeList2").empty();
+            $("#employeeList2").append("<option value=\"\">直接选择或搜索选择</option>");
+
+            let selectEmployeeList = employeeList.filter(p => p.positionId === data.value);
+            if (selectEmployeeList) {
+                for (let i in selectEmployeeList) {
+                    $("#employeeList2").append("<option value=" + selectEmployeeList[i].id + ">" + selectEmployeeList[i].name + "</option>");
+                }
+            }
+
+            form.render("select");
+        })
+
+        form.on('select(employeeList2)', function (data) {
+            let selectEmployee = employeeList.find(p => p.id === data.value);
+            if (selectEmployee) {
+                $("#baseSalary").val(selectEmployee.salary);
+                $("#bankCard").val(selectEmployee.bankCard);
+            }
+        })
+
+    });
+</script>
+</body>
+</html>

@@ -31,6 +31,11 @@ public class EmployeeService extends ServiceImpl<EmployeeMapper, Employee> {
      * @param employee
      */
     public void saveEmployee(Employee employee) {
+        // admin为系统默认账号
+        if ("admin".equals(employee.getLoginName())) {
+            throw new WarningException("登录账号已存在");
+        }
+
         if (StringUtils.isNotBlank(employee.getId())) {
             String s = checkName(employee);
             String s1 = checkLoginName(employee);
