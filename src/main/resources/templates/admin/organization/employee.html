@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>部门管理</title>
+    <title>员工管理</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -22,9 +22,32 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">部门</label>
                             <div class="layui-input-inline">
-                                <select name="id" id="departmentList" lay-search="">
-                                    <option value="">直接选择或搜索选择</option>
-                                </select>
+                                <label>
+                                    <select name="departmentId" id="departmentList" lay-filter="departmentList"
+                                            lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">职位</label>
+                            <div class="layui-input-inline">
+                                <label>
+                                    <select name="positionId" id="positionList" lay-filter="positionList" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">员工</label>
+                            <div class="layui-input-inline">
+                                <label>
+                                    <select name="id" id="employeeList" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                    </select>
+                                </label>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -61,11 +84,13 @@
             table = layui.table,
             miniPage = layui.miniPage;
 
+        let departmentList, positionList, employeeList;
+
         form.render();
 
         table.render({
             elem: '#currentTableId',
-            url: '/api/v1/department/page',
+            url: '/api/v1/employee/page',
             method: 'post',
             contentType: "application/json;charset=UTF-8",
             toolbar: '#toolbarDemo',
@@ -85,7 +110,23 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'name', minWidth: 150, title: '部门名称', sort: true},
+                    {field: 'name', minWidth: 150, title: '员工姓名', sort: true},
+                    {field: 'entryDate', minWidth: 150, title: '入职时间', sort: true},
+                    {field: 'phone', minWidth: 150, title: '电话号码', sort: true},
+                    {field: 'email', minWidth: 150, title: '邮箱', sort: true},
+                    {field: 'bankCard', minWidth: 150, title: '银行卡号', sort: true},
+                    {
+                        field: 'permission', minWidth: 150, title: '权限', sort: true, templet: function (d) {
+
+                            if (d.permission === 'ADMIN') {
+                                return "管理员"
+                            } else if (d.permission === "USER") {
+                                return "普通用户"
+                            } else {
+                                return d.permission
+                            }
+                        }
+                    },
                     {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center"}
                 ]
             ],
@@ -115,16 +156,23 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('/web/admin/organization/departmentAdd');
+                var content = miniPage.getHrefContent('/web/admin/organization/employeeAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '添加部门',
+                    title: '添加员工',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
+                    area: ['600px'],
                     shadeClose: true,
-                    content: content
+                    content: content,
+                    success: function (layero, index) {
+                        for (let i in departmentList) {
+                            layero.find("#departmentList2").append("<option value=" + departmentList[i].id + ">" + departmentList[i].name + "</option>");
+                        }
+                        form.render('select');
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -139,7 +187,7 @@
 
                     layer.confirm('确认删除 ' + names + " 吗？", function (index) {
                         $.ajax({
-                            url: '/api/v1/department/batch/' + ids,
+                            url: '/api/v1/employee/batch/' + ids,
                             method: 'delete',
                             success: function (res) {
                                 if (res.status === '200') {
@@ -168,20 +216,44 @@
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var content = miniPage.getHrefContent('/web/admin/organization/departmentAdd');
+                var content = miniPage.getHrefContent('/web/admin/organization/employeeAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '编辑部门',
+                    title: '编辑员工',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
+                    area: ['600px'],
                     shadeClose: true,
                     content: content,
-                    success: function(layero, index){
+                    success: function (layero, index) {
                         //获取子页面的元素，进行数据渲染
                         layero.find("#id").val(data.id);
                         layero.find("#name").val(data.name);
+                        layero.find("#entryDate").val(data.entryDate);
+                        layero.find("#phone").val(data.phone);
+                        layero.find("#email").val(data.email);
+                        layero.find("#bankCard").val(data.bankCard);
+                        layero.find("#loginName").val(data.loginName);
+                        layero.find("#password").val(data.password);
+                        layero.find("#permission").val(data.permission);
+                        layero.find("input[name=permission][value=ADMIN]").attr("checked", data.permission === 'ADMIN');
+                        layero.find("input[name=permission][value=USER]").attr("checked", data.permission === 'USER');
+                        for (let i in departmentList) {
+                            layero.find("#departmentList2").append("<option value=" + departmentList[i].id + ">" + departmentList[i].name + "</option>");
+                        }
+                        layero.find("#departmentList2").val(data.departmentId);
+
+                        let selectPositionList = positionList.filter(p => p.departmentId === data.departmentId);
+                        if (selectPositionList) {
+                            for (let i in selectPositionList) {
+                                layero.find("#positionList2").append("<option value=" + selectPositionList[i].id + ">" + selectPositionList[i].name + "</option>");
+                            }
+                        }
+                        layero.find("#positionList2").val(data.positionId);
+
+                        form.render('select');
                     },
                 });
                 $(window).on("resize", function () {
@@ -191,7 +263,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确认删除 ' + data.name + " 吗？", function (index) {
                     $.ajax({
-                        url: '/api/v1/department/' + data.id,
+                        url: '/api/v1/employee/' + data.id,
                         method: 'delete',
                         success: function (res) {
                             if (res.status === '200') {
@@ -208,19 +280,79 @@
             }
         });
 
+
         // 获取所有部门
         $.ajax({
             url: '/api/v1/department/all',
             method: 'get',
             success: function (res) {
                 if (res.status === '200') {
+                    departmentList = res.data
                     for (let i in res.data) {
                         $("#departmentList").append("<option value=" + res.data[i].id + ">" + res.data[i].name + "</option>");
-                        form.render()
                     }
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+
+                form.render('select')
+            }
+        });
+
+        // 获取所有职位
+        $.ajax({
+            url: '/api/v1/position/all',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    positionList = res.data
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
                 }
             }
         });
+
+        // 获取所有员工
+        $.ajax({
+            url: '/api/v1/employee/all',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    employeeList = res.data
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+            }
+        });
+
+        form.on('select(departmentList)', function (data) {
+            $("#positionList").empty();
+            $("#positionList").append("<option value=\"\">直接选择或搜索选择</option>");
+
+            let selectPositionList = positionList.filter(p => p.departmentId === data.value);
+            if (selectPositionList) {
+                for (let i in selectPositionList) {
+                    $("#positionList").append("<option value=" + selectPositionList[i].id + ">" + selectPositionList[i].name + "</option>");
+                }
+            }
+
+            form.render("select");
+        })
+
+        // 监听搜索-职位选择
+        form.on('select(positionList)', function (data) {
+            $("#employeeList").empty();
+            $("#employeeList").append("<option value=\"\">直接选择或搜索选择</option>");
+
+            let selectEmployeeList = employeeList.filter(p => p.positionId === data.value);
+            if (selectEmployeeList) {
+                for (let i in selectEmployeeList) {
+                    $("#employeeList").append("<option value=" + selectEmployeeList[i].id + ">" + selectEmployeeList[i].name + "</option>");
+                }
+            }
+
+            form.render("select");
+        })
 
     });
 </script>

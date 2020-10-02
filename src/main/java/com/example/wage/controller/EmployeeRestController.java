@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 员工管理控制器
@@ -43,14 +44,47 @@ public class EmployeeRestController {
     }
 
     /**
+     * 根据员工id批量删除员工
+     * @param ids 职位id
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/batch/{ids}")
+    public ResultUtil deletePosition(@PathVariable("ids") List<String> ids) {
+        employeeService.removeByIds(ids);
+        return ResultUtil.success();
+    }
+
+    /**
      * 分页查询
      * @param pageVo 参数
      * @return
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/web/admin")
+    @PostMapping("/page")
     public ResultUtil selectPage(@RequestBody PageVo<Employee> pageVo) {
         return ResultUtil.success(employeeService.selectPage(pageVo));
+    }
+
+
+    /**
+     * 获取所有员工
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/all")
+    public ResultUtil all() {
+        return ResultUtil.success(employeeService.list());
+    }
+
+    /**
+     * 根据职位id获取所有员工
+     * @return
+     */
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/all/{positionId}")
+    public ResultUtil allByPositionId(@PathVariable("positionId") String positionId) {
+        return ResultUtil.success(employeeService.getAllByPositionId(positionId));
     }
 
 }

@@ -49,8 +49,8 @@ public class BasicSalaryRestController {
      * @return
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/web/admin")
-    public ResultUtil selectPage(PageVo<BasicSalary> pageVo) {
+    @PostMapping("/page")
+    public ResultUtil selectPage(@RequestBody PageVo<BasicSalary> pageVo) {
         return ResultUtil.success(basicSalaryService.selectPage(pageVo));
     }
 

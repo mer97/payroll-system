@@ -249,7 +249,13 @@
         },
         {
           "title": "职位管理",
-          "href": "/web/admin/icon-picker",
+          "href": "/web/admin/organization/position",
+          "icon": "fa fa-adn",
+          "target": "_self"
+        },
+        {
+          "title": "员工管理",
+          "href": "/web/admin/organization/employee",
           "icon": "fa fa-adn",
           "target": "_self"
         }

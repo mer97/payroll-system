@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>部门管理</title>
+    <title>职位管理</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -22,9 +22,21 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">部门</label>
                             <div class="layui-input-inline">
-                                <select name="id" id="departmentList" lay-search="">
-                                    <option value="">直接选择或搜索选择</option>
-                                </select>
+                                <label>
+                                    <select name="departmentId" id="departmentList" lay-filter="departmentList" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">职位</label>
+                            <div class="layui-input-inline">
+                                <label>
+                                    <select name="id" id="positionList" lay-search="">
+                                        <option value="">直接选择或搜索选择</option>
+                                    </select>
+                                </label>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -61,11 +73,13 @@
             table = layui.table,
             miniPage = layui.miniPage;
 
+        let positionList, departmentList;
+
         form.render();
 
         table.render({
             elem: '#currentTableId',
-            url: '/api/v1/department/page',
+            url: '/api/v1/position/page',
             method: 'post',
             contentType: "application/json;charset=UTF-8",
             toolbar: '#toolbarDemo',
@@ -85,7 +99,8 @@
             cols: [
                 [
                     {type: "checkbox", width: 50},
-                    {field: 'name', minWidth: 150, title: '部门名称', sort: true},
+                    {field: 'name', minWidth: 150, title: '职位名称', sort: true},
+                    {field: 'departmentName', minWidth: 150, title: '部门名称', sort: true},
                     {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center"}
                 ]
             ],
@@ -115,16 +130,22 @@
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
             if (obj.event === 'add') {   // 监听添加操作
-                var content = miniPage.getHrefContent('/web/admin/organization/departmentAdd');
+                var content = miniPage.getHrefContent('/web/admin/organization/positionAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '添加部门',
+                    title: '添加职位',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
-                    content: content
+                    content: content,
+                    success: function (layero, index) {
+                        for (let i in departmentList) {
+                            layero.find("#departmentList2").append("<option value=" + departmentList[i].id + ">" + departmentList[i].name + "</option>");
+                        }
+                        form.render('select');
+                    }
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
@@ -139,7 +160,7 @@
 
                     layer.confirm('确认删除 ' + names + " 吗？", function (index) {
                         $.ajax({
-                            url: '/api/v1/department/batch/' + ids,
+                            url: '/api/v1/position/batch/' + ids,
                             method: 'delete',
                             success: function (res) {
                                 if (res.status === '200') {
@@ -168,20 +189,25 @@
             var data = obj.data;
             if (obj.event === 'edit') {
 
-                var content = miniPage.getHrefContent('/web/admin/organization/departmentAdd');
+                var content = miniPage.getHrefContent('/web/admin/organization/positionAdd');
                 var openWH = miniPage.getOpenWidthHeight();
 
                 var index = layer.open({
-                    title: '编辑部门',
+                    title: '编辑职位',
                     type: 1,
                     shade: 0.2,
                     maxmin: true,
                     shadeClose: true,
                     content: content,
-                    success: function(layero, index){
+                    success: function (layero, index) {
                         //获取子页面的元素，进行数据渲染
                         layero.find("#id").val(data.id);
                         layero.find("#name").val(data.name);
+                        for (let i in departmentList) {
+                            layero.find("#departmentList2").append("<option value=" + departmentList[i].id + ">" + departmentList[i].name + "</option>");
+                        }
+                        layero.find("#departmentList2").val(data.departmentId);
+                        form.render('select');
                     },
                 });
                 $(window).on("resize", function () {
@@ -191,7 +217,7 @@
             } else if (obj.event === 'delete') {
                 layer.confirm('确认删除 ' + data.name + " 吗？", function (index) {
                     $.ajax({
-                        url: '/api/v1/department/' + data.id,
+                        url: '/api/v1/position/' + data.id,
                         method: 'delete',
                         success: function (res) {
                             if (res.status === '200') {
@@ -208,19 +234,51 @@
             }
         });
 
+
         // 获取所有部门
         $.ajax({
             url: '/api/v1/department/all',
             method: 'get',
             success: function (res) {
                 if (res.status === '200') {
+                    departmentList = res.data
                     for (let i in res.data) {
                         $("#departmentList").append("<option value=" + res.data[i].id + ">" + res.data[i].name + "</option>");
-                        form.render()
                     }
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
+                }
+
+                form.render('select')
+            }
+        });
+
+        // 获取所有职位
+        $.ajax({
+            url: '/api/v1/position/all',
+            method: 'get',
+            success: function (res) {
+                if (res.status === '200') {
+                    positionList = res.data
+                } else {
+                    layer.msg(res.message, {time: 5000, icon: 2, offset: '60px'})
                 }
             }
         });
+
+        form.on('select(departmentList)', function (data) {
+            $("#positionList").empty();
+            $("#positionList").append("<option value=\"\">直接选择或搜索选择</option>");
+
+            let selectPositionList = positionList.filter(p => p.departmentId === data.value);
+            if (selectPositionList) {
+                for (let i in selectPositionList) {
+                    $("#positionList").append("<option value=" + selectPositionList[i].id + ">" + selectPositionList[i].name + "</option>");
+                }
+            }
+
+            form.render("select");
+        })
 
     });
 </script>

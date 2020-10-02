@@ -12,42 +12,84 @@ import com.example.wage.vo.PageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 部门管理服务类
  */
 @Service
 public class DepartmentService extends ServiceImpl<DepartmentMapper, Department> {
 
-    public void saveDepartment(Department department) {
-        LambdaQueryWrapper<Department> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        lambdaQueryWrapper.eq(Department::getName, department.getName());
-        Department one = this.getOne(lambdaQueryWrapper);
+    @Resource private PositionService positionService;
 
+    /**
+     * 保存部门，保存前校验部门名称是否已存在
+     * @param department
+     */
+    public void saveDepartment(Department department) {
         if (StringUtils.isNotBlank(department.getId())) {
-            if (one == null || one.getId().equals(department.getId())) {
-                department.updateById();
-            } else {
+            String s = checkName(department);
+            if (StringUtils.isNotBlank(s) && !department.getId().equals(s)) {
                 throw new WarningException("部门名称已存在");
+            } else {
+                department.updateById();
             }
         } else {
-            if (one == null) {
-                department.insert();
-            } else {
+            if (StringUtils.isNotBlank(checkName(department))) {
                 throw new WarningException("部门名称已存在");
+            } else {
+                department.insert();
             }
         }
     }
 
+    /**
+     * 根据部门名称获取部门id
+     * @param department
+     * @return
+     */
+    public String checkName(Department department) {
+        LambdaQueryWrapper<Department> lambdaQueryWrapper = Wrappers.lambdaQuery();
+        lambdaQueryWrapper.eq(Department::getName, department.getName());
+        Department one = this.getOne(lambdaQueryWrapper);
+        return one != null ? one.getId() : null;
+    }
+
+    /**
+     * 分页查询部门
+     * @param pageVo
+     * @return
+     */
     public IPage<Department> selectPage(PageVo<Department> pageVo) {
         Page<Department> page = new Page<>(pageVo.getPage() - 1, pageVo.getLimit());
         LambdaQueryWrapper<Department> lambdaQueryWrapper = Wrappers.lambdaQuery();
         if (pageVo.getSearchParams() != null) {
             Department department = pageVo.getSearchParams();
-            if (StringUtils.isNotBlank(department.getName())) {
-                lambdaQueryWrapper.eq(Department::getName, department.getName());
+            if (StringUtils.isNotBlank(department.getId())) {
+                lambdaQueryWrapper.eq(Department::getId, department.getId());
             }
         }
         return super.baseMapper.selectPage(page, lambdaQueryWrapper);
     }
 
+    /**
+     * 根据部门id删除职位及旗下所有职位
+     * @param id 部门id
+     * @return
+     */
+    public void deleteDepartment(String id) {
+        super.removeById(id);
+        positionService.deletePosition(id);
+    }
+
+    /**
+     * 根据部门id批量删除部门及旗下所有职位
+     * @param ids 部门id
+     * @return
+     */
+    public void deleteDepartmentBatch(List<String> ids) {
+        super.removeByIds(ids);
+        positionService.deletePositionBatch(ids);
+    }
 }

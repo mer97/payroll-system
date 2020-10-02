@@ -15,10 +15,19 @@
 
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
-            <label class="layui-form-label required">部门名称</label>
+            <label class="layui-form-label required">职位名称</label>
             <div class="layui-input-block">
                 <input type="text" name="id" id="id" hidden="hidden">
-                <input type="text" name="name" id="name" lay-verify="required" lay-reqtext="部门名称不能为空" placeholder="请输入部门名称" class="layui-input">
+                <input type="text" name="name" id="name" lay-verify="required" lay-reqtext="职位名称不能为空" placeholder="请输入职位名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label required">所属部门</label>
+            <div class="layui-input-block">
+                <select name="departmentId" id="departmentList2" lay-search="" lay-verify="required" lay-reqtext="所属部门不能为空">
+                    <option value="">直接选择或搜索选择</option>
+                </select>
             </div>
         </div>
 
@@ -47,7 +56,7 @@
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
-                url: '/api/v1/department/save',
+                url: '/api/v1/position/save',
                 method: 'post',
                 data: JSON.stringify(data.field),
                 contentType: "application/json",

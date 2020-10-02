@@ -39,19 +39,19 @@ public class DepartmentRestController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResultUtil deleteDepartment(@PathVariable("id") String id) {
-        departmentService.removeById(id);
+        departmentService.deleteDepartment(id);
         return ResultUtil.success();
     }
 
     /**
-     * 根据部门id删除职位
+     * 根据部门id批量删除部门
      * @param ids 部门id
      * @return
      */
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/batch/{ids}")
     public ResultUtil deleteDepartmentBatch(@PathVariable("ids") List<String> ids) {
-        departmentService.removeByIds(ids);
+        departmentService.deleteDepartmentBatch(ids);
         return ResultUtil.success();
     }
 
@@ -61,7 +61,7 @@ public class DepartmentRestController {
      * @return
      */
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/web/admin")
+    @PostMapping("/page")
     public ResultUtil selectPage(@RequestBody PageVo<Department> pageVo) {
         return ResultUtil.success(departmentService.selectPage(pageVo));
     }

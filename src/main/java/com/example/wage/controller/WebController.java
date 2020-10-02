@@ -148,6 +148,26 @@ public class WebController {
         return "admin/organization/departmentAdd";
     }
 
+    @GetMapping("/admin/organization/position")
+    public String position() {
+        return "admin/organization/position";
+    }
+
+    @GetMapping("/admin/organization/positionAdd")
+    public String positionAdd() {
+        return "admin/organization/positionAdd";
+    }
+
+    @GetMapping("/admin/organization/employee")
+    public String employee() {
+        return "admin/organization/employee";
+    }
+
+    @GetMapping("/admin/organization/employeeAdd")
+    public String employeeAdd() {
+        return "admin/organization/employeeAdd";
+    }
+
 //    /**
 //     * 页面跳转
 //     */

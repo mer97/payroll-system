@@ -5,9 +5,7 @@ import com.example.wage.service.SalaryService;
 import com.example.wage.util.ResultUtil;
 import com.example.wage.vo.PageVo;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -26,8 +24,8 @@ public class SalaryRestController {
      * @return
      */
     @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/web/admin")
-    public ResultUtil selectPage(PageVo<Salary> pageVo) {
+    @PostMapping("/page")
+    public ResultUtil selectPage(@RequestBody PageVo<Salary> pageVo) {
         return ResultUtil.success(salaryService.selectPage(pageVo));
     }
 
