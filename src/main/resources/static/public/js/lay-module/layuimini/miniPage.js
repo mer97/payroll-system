@@ -120,6 +120,7 @@ layui.define(["element", "jquery"], function (exports) {
                     element.init();
                 },
                 error: function (xhr, textstatus, thrown) {
+                    console.log("初始化页面内容-异常", xhr.status, xhr.statusText)
                     return layer.msg('Status:' + xhr.status + '，' + xhr.statusText + '，请稍后再试！');
                 }
             });
@@ -182,6 +183,7 @@ layui.define(["element", "jquery"], function (exports) {
                     content = data;
                 },
                 error: function (xhr, textstatus, thrown) {
+                    console.log("获取指定链接内容-异常", xhr.status, xhr.statusText)
                     return layer.msg('Status:' + xhr.status + '，' + xhr.statusText + '，请稍后再试！');
                 }
             });

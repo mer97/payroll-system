@@ -101,7 +101,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() throws UsernameNotFoundException {
         return (username) -> {
             if (StringUtils.isBlank(username)) {
-                throw new UsernameNotFoundException("用户名不存在: " + username);
+                throw new UsernameNotFoundException("用户名不能为空");
             }
 
             List<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
@@ -117,7 +117,7 @@ public class UserSecurityConfig extends WebSecurityConfigurerAdapter {
                 lambdaQueryWrapper.eq(Employee::getLoginName, username);
                 Employee employee = employeeMapper.selectOne(lambdaQueryWrapper);
                 if (employee == null) {
-                    throw new UsernameNotFoundException("用户名不存在: " + username);
+                    throw new UsernameNotFoundException("登录账号不存在: " + username);
                 } else {
                     simpleGrantedAuthorities.add(new SimpleGrantedAuthority(employee.getPermission()));
                     password = employee.getPassword();

@@ -32,7 +32,7 @@ public class DepartmentRestController {
     }
 
     /**
-     * 根据部门id删除职位
+     * 根据部门id删除部门
      * @param id 部门id
      * @return
      */
